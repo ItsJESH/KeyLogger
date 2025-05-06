@@ -56,8 +56,6 @@ def onpress(k):
             pass
         elif k== keyboard.Key.backspace and len(log) > 0:
             log = log[:-1]
-        elif k== keyboard.Key.esc:
-            return False
         elif str(k).strip("'") in string.ascii_letters+string.digits+string.punctuation:
             log += str(k).strip("'")
         logcon.append(str(k))
