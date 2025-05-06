@@ -7,7 +7,7 @@ import os
 load_dotenv()
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
-app.config["MONGO_URI"] = os.environ('MongoServer')
+app.config["MONGO_URI"] = os.environ.get('MongoServer')  ## Your Database 
 mongo = PyMongo(app)
 
 @app.route('/')
@@ -32,7 +32,7 @@ def logs(id):
                     {"$push": {"logs": log_entry}}
                 )
             socketio.emit('new_log', {'user_id': id, 'log': log_entry}, broadcast=True)
-            return jsonify({"status": "success"}), 200
+            return None
         
         if request.method=='GET':
             user = mongo.db.users.find_one({"_id": id})
@@ -70,7 +70,7 @@ def users():
                 "logs": []
                 }
                 mongo.db.users.insert_one(new_user)
-            return "User Created",201
+            return None
             
         
     except Exception as e:

