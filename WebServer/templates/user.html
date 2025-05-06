@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>USERs</title>
+    <style>
+        /* Cyber Terminal Theme */
+        body {
+            background-color: #0a0a0a;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 1px dashed #00ff00;
+            padding-bottom: 15px;
+        }
+        
+        .header h1 {
+            color: #00ffff;
+            text-shadow: 0 0 5px #00ffff;
+            letter-spacing: 2px;
+        }
+        
+        .users-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        
+        .user-card {
+            background: #111;
+            border: 1px solid #00ff0050;
+            border-radius: 5px;
+            padding: 15px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .user-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px #00ff0030;
+            border-color: #00ffff;
+        }
+        
+        .user-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            
+            pointer-events: none;
+        }
+        
+        
+        .user-name {
+            color: #00ffff;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #00ff0050;
+            text-align:center;
+            padding-bottom: 5px;
+        }
+        
+        .user-info {
+            margin: 10px 0;
+            font-size: 0.9rem;
+        }
+        
+        .user-info strong {
+            color: #ffff00;
+        }
+        
+        .view-btn {
+            display: inline-block;
+            background: #003300;
+            color: #00ff00;
+            padding: 5px 15px;
+            text-decoration: none;
+            border: 1px solid #00ff00;
+            border-radius: 3px;
+            transition: all 0.3s;
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        .view-btn:hover {
+            background: #00ff00;
+            color: #000;
+            text-shadow: 0 0 5px #000;
+        }
+        
+        .last-log {
+            color: #ff00ff;
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📡 ACTIVE USERs</h1>
+        <p>Total users: {{ users|length }}</p>
+    </div>
+    
+    <div class="users-grid">
+        {% for user in users %}
+        <div class="user-card">
+            <div class="user-name">
+                {{ user.name }}
+            </div>
+            
+            <div class="user-info">
+                <p><strong>ID:</strong> {{ user.id }}</p>
+                <p><strong>Device:</strong> {{ user.device }}</p>
+                <p><strong>First Seen:</strong> {{ user.first_log_date }}</p>
+            </div>
+            
+            <a href="{{ url_for('logs', id=user.id) }}" class="view-btn">ACCESS LOGS</a>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
